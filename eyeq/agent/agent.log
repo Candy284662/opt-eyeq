@@ -1387,3 +1387,21 @@
 2025-04-08 19:09:38,920 - INFO - Daten erfolgreich an Server gesendet
 2025-04-08 19:10:39,559 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 131, 'logged_in_users': 2}
 2025-04-08 19:10:39,586 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:11:39,834 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:11:39,858 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:12:39,859 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:12:39,883 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:13:39,889 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:13:39,913 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:14:39,915 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.3, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:14:39,936 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:15:39,938 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.3, 'process_count': 133, 'logged_in_users': 2}
+2025-04-08 19:15:39,962 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:16:39,965 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 131, 'logged_in_users': 2}
+2025-04-08 19:16:39,991 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:17:39,993 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.4, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:17:40,015 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:18:40,020 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.3, 'process_count': 133, 'logged_in_users': 2}
+2025-04-08 19:18:40,048 - INFO - Daten erfolgreich an Server gesendet
+2025-04-08 19:19:40,049 - INFO - Erfasste Metriken: {'hostname': 'monsrv', 'ip_address': '10.0.30.102', 'os': 'Linux 6.1.0-32-amd64', 'disk_usage': 7.2, 'memory_usage': 9.3, 'process_count': 132, 'logged_in_users': 2}
+2025-04-08 19:19:40,077 - INFO - Daten erfolgreich an Server gesendet

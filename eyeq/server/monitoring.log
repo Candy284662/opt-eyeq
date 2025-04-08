@@ -9635,3 +9635,57 @@ HTTP response body: {"code":"not found","message":"organization name \"itsolutio
 2025-04-08 17:10:39,567 - INFO - 2025-04-08 17:10:39 - monsrv - logged_in_users on monsrv: 2
 2025-04-08 17:10:39,584 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
 2025-04-08 17:10:39,585 - INFO - 172.18.0.1 - - [08/Apr/2025 17:10:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:11:39,838 - INFO - 2025-04-08 17:11:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:11:39,838 - INFO - 2025-04-08 17:11:39 - monsrv - memory_usage on monsrv: 9.4
+2025-04-08 17:11:39,838 - INFO - 2025-04-08 17:11:39 - monsrv - process_count on monsrv: 132
+2025-04-08 17:11:39,838 - INFO - 2025-04-08 17:11:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:11:39,856 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:11:39,856 - INFO - 172.18.0.1 - - [08/Apr/2025 17:11:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:12:39,862 - INFO - 2025-04-08 17:12:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:12:39,862 - INFO - 2025-04-08 17:12:39 - monsrv - memory_usage on monsrv: 9.4
+2025-04-08 17:12:39,862 - INFO - 2025-04-08 17:12:39 - monsrv - process_count on monsrv: 132
+2025-04-08 17:12:39,863 - INFO - 2025-04-08 17:12:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:12:39,882 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:12:39,882 - INFO - 172.18.0.1 - - [08/Apr/2025 17:12:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:13:39,891 - INFO - 2025-04-08 17:13:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:13:39,891 - INFO - 2025-04-08 17:13:39 - monsrv - memory_usage on monsrv: 9.4
+2025-04-08 17:13:39,891 - INFO - 2025-04-08 17:13:39 - monsrv - process_count on monsrv: 132
+2025-04-08 17:13:39,891 - INFO - 2025-04-08 17:13:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:13:39,911 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:13:39,912 - INFO - 172.18.0.1 - - [08/Apr/2025 17:13:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:14:39,919 - INFO - 2025-04-08 17:14:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:14:39,919 - INFO - 2025-04-08 17:14:39 - monsrv - memory_usage on monsrv: 9.3
+2025-04-08 17:14:39,919 - INFO - 2025-04-08 17:14:39 - monsrv - process_count on monsrv: 132
+2025-04-08 17:14:39,919 - INFO - 2025-04-08 17:14:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:14:39,935 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:14:39,936 - INFO - 172.18.0.1 - - [08/Apr/2025 17:14:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:15:39,942 - INFO - 2025-04-08 17:15:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:15:39,942 - INFO - 2025-04-08 17:15:39 - monsrv - memory_usage on monsrv: 9.3
+2025-04-08 17:15:39,942 - INFO - 2025-04-08 17:15:39 - monsrv - process_count on monsrv: 133
+2025-04-08 17:15:39,942 - INFO - 2025-04-08 17:15:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:15:39,960 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:15:39,961 - INFO - 172.18.0.1 - - [08/Apr/2025 17:15:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:16:39,971 - INFO - 2025-04-08 17:16:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:16:39,971 - INFO - 2025-04-08 17:16:39 - monsrv - memory_usage on monsrv: 9.4
+2025-04-08 17:16:39,971 - INFO - 2025-04-08 17:16:39 - monsrv - process_count on monsrv: 131
+2025-04-08 17:16:39,971 - INFO - 2025-04-08 17:16:39 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:16:39,989 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:16:39,990 - INFO - 172.18.0.1 - - [08/Apr/2025 17:16:39] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:17:39,999 - INFO - 2025-04-08 17:17:39 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:17:40,000 - INFO - 2025-04-08 17:17:40 - monsrv - memory_usage on monsrv: 9.4
+2025-04-08 17:17:40,001 - INFO - 2025-04-08 17:17:40 - monsrv - process_count on monsrv: 132
+2025-04-08 17:17:40,001 - INFO - 2025-04-08 17:17:40 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:17:40,013 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:17:40,014 - INFO - 172.18.0.1 - - [08/Apr/2025 17:17:40] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:18:40,027 - INFO - 2025-04-08 17:18:40 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:18:40,027 - INFO - 2025-04-08 17:18:40 - monsrv - memory_usage on monsrv: 9.3
+2025-04-08 17:18:40,027 - INFO - 2025-04-08 17:18:40 - monsrv - process_count on monsrv: 133
+2025-04-08 17:18:40,027 - INFO - 2025-04-08 17:18:40 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:18:40,047 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:18:40,047 - INFO - 172.18.0.1 - - [08/Apr/2025 17:18:40] "POST /submit HTTP/1.1" 200 -
+2025-04-08 17:19:40,055 - INFO - 2025-04-08 17:19:40 - monsrv - disk_usage on monsrv: 7.2
+2025-04-08 17:19:40,056 - INFO - 2025-04-08 17:19:40 - monsrv - memory_usage on monsrv: 9.3
+2025-04-08 17:19:40,056 - INFO - 2025-04-08 17:19:40 - monsrv - process_count on monsrv: 132
+2025-04-08 17:19:40,056 - INFO - 2025-04-08 17:19:40 - monsrv - logged_in_users on monsrv: 2
+2025-04-08 17:19:40,075 - INFO - InfluxDB Schreiben erfolgreich für POST /submit
+2025-04-08 17:19:40,076 - INFO - 172.18.0.1 - - [08/Apr/2025 17:19:40] "POST /submit HTTP/1.1" 200 -
