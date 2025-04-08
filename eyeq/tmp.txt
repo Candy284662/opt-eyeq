@@ -1,0 +1,115 @@
+# server-agent-windows.py
+import subprocess
+import requests
+import time
+import socket
+import platform
+import json
+import logging
+
+# Monitoring-Server URL
+MONITORING_SERVER = "http://10.0.30.102:5000/submit"
+
+# Logging konfigurieren
+logging.basicConfig(
+    filename='agent-windows.log',  # Log-Datei im aktuellen Verzeichnis
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+def run_powershell(command):
+    """
+    Führt einen PowerShell-Befehl aus und gibt das Ergebnis zurück.
+    """
+    try:
+        result = subprocess.run(
+            ["powershell", "-NoProfile", "-Command", command],
+            capture_output=True,
+            text=True,
+            shell=True
+        )
+        if result.returncode == 0:
+            return result.stdout.strip()
+        else:
+            logging.error(f"PowerShell-Fehler: {result.stderr.strip()}")
+            return None
+    except Exception as e:
+        logging.error(f"Fehler beim Ausführen des PowerShell-Befehls: {e}")
+        return None
+
+def get_ip_address():
+    """
+    Ermittelt die IP-Adresse des Systems.
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0)
+        s.connect(('8.8.8.8', 80))  # Verbindung zu Google DNS, um die IP zu ermitteln
+        ip_address = s.getsockname()[0]
+        s.close()
+        return ip_address
+    except Exception as e:
+        logging.error(f"Fehler beim Ermitteln der IP-Adresse: {e}")
+        return "unknown"
+
+def get_logged_in_users():
+    """
+    Ermittelt die Anzahl der eingeloggten Benutzer mit PowerShell.
+    """
+    try:
+        # PowerShell-Befehl, um die aktiven Benutzer-Sessions zu zählen
+        user_count = run_powershell("(Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -ExpandProperty NumberOfUsers)")
+        return int(user_count) if user_count else 0
+    except Exception as e:
+        logging.error(f"Fehler beim Ermitteln der eingeloggten Benutzer: {e}")
+        return 0
+
+def collect_metrics():
+    """
+    Erfasst Systemmetriken mit PowerShell-Befehlen und zusätzlichen Informationen.
+    """
+    try:
+        # Berechne disk_usage als Prozentsatz (100 - FreeSpace/Size * 100)
+        free_space = float(run_powershell("Get-WmiObject Win32_LogicalDisk -Filter \"DeviceID='C:'\" | Select-Object -ExpandProperty FreeSpace") or 0)
+        total_size = float(run_powershell("Get-WmiObject Win32_LogicalDisk -Filter \"DeviceID='C:'\" | Select-Object -ExpandProperty Size") or 1)
+        disk_usage = 100 - (free_space / total_size * 100)  # Prozentsatz der genutzten Festplatte
+
+        metrics = {
+            "hostname": socket.gethostname(),
+            "ip_address": get_ip_address(),  # Neue Metrik: IP-Adresse
+            "os": f"{platform.system()} {platform.release()}",  # Neue Metrik: OS-Informationen (z. B. "Windows 10")
+            "cpu_usage": float(run_powershell("(Get-WmiObject Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average") or 0),
+            "memory_usage": float(run_powershell("(Get-Counter '\\Memory\\% Committed Bytes In Use').CounterSamples.CookedValue") or 0),
+            "disk_usage": disk_usage,
+            "process_count": int(run_powershell("(Get-Process | Measure-Object).Count") or 0),
+            "logged_in_users": get_logged_in_users(),  # Neue Metrik: Anzahl eingeloggter Benutzer
+            "timestamp": time.time()  # Zeitstempel (wird vom Server überschrieben, aber für Kompatibilität enthalten)
+        }
+        return metrics
+    except ValueError as ve:
+        logging.error(f"Fehler bei der Konvertierung der Metriken: {ve}")
+        return None
+    except Exception as e:
+        logging.error(f"Fehler beim Sammeln der Metriken: {e}")
+        return None
+
+def send_metrics():
+    """
+    Sendet die Metriken an den Monitoring-Server.
+    """
+    metrics = collect_metrics()
+    if metrics:
+        try:
+            response = requests.post(MONITORING_SERVER, json=metrics, timeout=30)
+            if response.status_code == 200:
+                logging.info(f"Daten erfolgreich gesendet: {json.dumps(metrics, indent=2)}")
+            else:
+                logging.error(f"Fehler beim Senden der Daten: HTTP {response.status_code} - {response.text}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Netzwerkfehler beim Senden der Daten: {e}")
+
+if __name__ == "__main__":
+    logging.info("Starte Windows-Agent...")
+    while True:
+        send_metrics()
+        time.sleep(60)  # Sende alle 60 Sekunden

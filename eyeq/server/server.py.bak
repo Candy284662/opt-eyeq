@@ -1,0 +1,72 @@
+# server.py
+from flask import Flask, request
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+import logging
+from datetime import datetime
+
+app = Flask(__name__)
+
+# Logging
+logging.basicConfig(filename='/app/monitoring.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+# InfluxDB Konfiguration
+client = InfluxDBClient(url="http://influxdb:8086", token="3390EqIj-DvP7r3rmXOEi02OEkH78SOmvT6S2mTr5lMOLFNJgxEzzFnCgVp8rVuenLQGIF0RyZdgygwaFdVwbw==", org="itsolutions")
+write_api = client.write_api(write_options=SYNCHRONOUS)
+BUCKET = "eyeqdb"
+
+# Schwellenwerte
+THRESHOLDS = {
+    "disk_usage": {"soft": 80, "hard": 90},
+    "memory_usage": {"soft": 70, "hard": 85},
+    "process_count": {"soft": 150, "hard": 200},
+    "logged_in_users": {"soft": 5, "hard": 10}
+}
+
+def check_threshold(value, soft, hard, metric_name):
+    if value >= hard:
+        logging.warning(f"{metric_name} überschreitet Hard-Limit: {value}")
+        return f"Hard Limit exceeded - {metric_name}: {value}"
+    elif value >= soft:
+        logging.info(f"{metric_name} überschreitet Soft-Limit: {value}")
+        return f"Soft Limit exceeded - {metric_name}: {value}"
+    return f"{metric_name}: {value} (OK)"
+
+@app.route('/submit', methods=['POST'])
+def receive_metrics():
+    data = request.json
+    hostname = data.get("hostname")
+
+    # Prüfe Schwellenwerte für jede Metrik
+    for metric, value in data.items():
+        if metric in THRESHOLDS:
+            soft = THRESHOLDS[metric]["soft"]
+            hard = THRESHOLDS[metric]["hard"]
+            status = check_threshold(value, soft, hard, f"{metric} on {hostname}")
+            logging.info(status)
+
+    # Schreibe die Daten in InfluxDB
+    point = (
+        Point("system_metrics")
+        .tag("host", hostname)
+        .tag("ip_address", data.get("ip_address", "unknown"))
+        .tag("os", data.get("os", "unknown"))
+        .field("disk_usage", float(data.get("disk_usage", 0)))
+        .field("memory_usage", float(data.get("memory_usage", 0)))
+        .field("process_count", float(data.get("process_count", 0)))
+        .field("logged_in_users", float(data.get("logged_in_users", 0)))
+        .time(datetime.utcnow().isoformat() + "Z")
+    )
+
+    try:
+        write_api.write(bucket=BUCKET, record=point)
+        logging.info("InfluxDB Schreiben erfolgreich für POST /submit")
+    except Exception as e:
+        logging.error(f"InfluxDB Schreiben fehlgeschlagen: {e}")
+        return {"status": "failed", "error": str(e)}, 500
+
+    return {"status": "success"}, 200
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

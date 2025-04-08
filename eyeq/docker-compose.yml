@@ -1,0 +1,59 @@
+services:
+  monitoring-server:
+    container_name: eyeq-server
+    hostname: eyeq-server
+    build: /opt/eyeq/server
+    ports:
+      - "5000:5000"
+    volumes:
+      - /opt/eyeq/server/monitoring.log:/app/monitoring.log
+    depends_on:
+      - influxdb
+    networks:
+      - eyeq-network
+
+  influxdb:
+    container_name: eyeq-db
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=root
+      - DOCKER_INFLUXDB_INIT_PASSWORD=Start123
+      - DOCKER_INFLUXDB_INIT_ORG=itsolutions
+      - DOCKER_INFLUXDB_INIT_BUCKET=eyeqdb
+    volumes:
+      - /opt/eyeq/influxdb-data:/var/lib/influxdb2
+    networks:
+      - eyeq-network
+
+  grafana:
+    container_name: eyeq-grafana
+    image: grafana/grafana:10.4.1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - /opt/eyeq/grafana-data:/var/lib/grafana
+    networks:
+      - eyeq-network
+
+networks:
+  eyeq-network:
+    driver: bridge
+
+volumes:
+  influxdb-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/eyeq/influxdb-data
+  grafana-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/eyeq/grafana-data

@@ -1,0 +1,39 @@
+import psutil
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+from alarm import check_threshold
+import os
+import socket
+
+# InfluxDB Konfiguration
+client = InfluxDBClient(url="http://influxdb:8086", token="3390EqIj-DvP7r3rmXOEi02OEkH78SOmvT6S2mTr5lMOLFNJgxEzzFnCgVp8rVuenLQGIF0RyZdgygwaFdVwbw==", org="itsolutions")
+write_api = client.write_api(write_options=SYNCHRONOUS)
+BUCKET = "eyeqdb"
+
+def get_disk_usage():
+    usage = psutil.disk_usage('/').percent
+    status = check_threshold(usage, 80, 90, "Disk Usage (%)")
+    send_to_influxdb("disk_usage", usage)
+    return status
+
+def get_memory_usage():
+    usage = psutil.virtual_memory().percent
+    status = check_threshold(usage, 70, 85, "Memory Usage (%)")
+    send_to_influxdb("memory_usage", usage)
+    return status
+
+def get_process_count():
+    count = len(psutil.pids())
+    status = check_threshold(count, 150, 200, "Process Count")
+    send_to_influxdb("process_count", count)
+    return status
+
+def send_to_influxdb(metric_name, value):
+    hostname = socket.gethostname()
+    point = (
+        Point("system_metrics")
+        .field(metric_name, value)
+        .tag("host", hostname)
+        .time(datetime.utcnow().isoformat() + "Z")  # Timestamp hinzufügen
+    )
+    write_api.write(bucket=BUCKET, record=point)
