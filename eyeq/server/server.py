@@ -1,41 +1,41 @@
-# server.py
-from flask import Flask, request
-from influxdb_client import InfluxDBClient, Point
-from influxdb_client.client.write_api import SYNCHRONOUS
-import logging
-from datetime import datetime
-import configparser
-import os
-from alarm import check_threshold  # Import der Funktion aus alarm.py
+# Importieren der notwendigen Module
+from flask import Flask, request # Flask für Webserver und HTTP-Requests
+from influxdb_client import InfluxDBClient, Point # InfluxDB Client und Point für die Interaktion mit der InfluxDB
+from influxdb_client.client.write_api import SYNCHRONOUS # Synchronous Schreibmodus für InfluxDB
+import logging # Logging zur Protokollierung von Fehlern und Erfolgen
+from datetime import datetime # Für Zeitstempel
+import configparser # Zum Lesen der Konfigurationsdatei
+import os  # Für die Arbeit mit Dateipfaden und Umgebungsvariablen
+from alarm import check_threshold  # Import der Funktion zur Schwellenwertprüfung aus der alarm.py-Datei
+app = Flask(__name__) # Initialisieren der Flask-Anwendung
 
-app = Flask(__name__)
-
-# Logging (nur für InfluxDB-bezogene Logs)
+# Logging konfigurieren (Log-Datei für InfluxDB-bezogene Aktivitäten)
 logging.basicConfig(filename='/app/monitoring.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Lese die Konfigurationsdatei
+# Konfigurationsdatei laden
 config = configparser.ConfigParser()
 config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
-if not os.path.exists(config_path):
+if not os.path.exists(config_path): # Überprüfen, ob die Konfigurationsdatei existiert
     logging.error(f"Config-Datei nicht gefunden: {config_path}")
     raise FileNotFoundError(f"Config-Datei nicht gefunden: {config_path}")
-
+# Konfigurationsdatei lesen
 config.read(config_path)
 
-# Überprüfe, ob die Sektion [influxdb] existiert
+# Überprüfen, ob die Sektion [influxdb] in der Konfigurationsdatei existiert
 if 'influxdb' not in config:
     logging.error("Sektion [influxdb] in config.ini nicht gefunden!")
     raise KeyError("Sektion [influxdb] in config.ini nicht gefunden!")
 
-# InfluxDB Konfiguration aus config.ini lesen
+# InfluxDB-Konfigurationswerte aus der Datei auslesen
 influxdb_config = config['influxdb']
 INFLUXDB_URL = influxdb_config['url']
 INFLUXDB_TOKEN = influxdb_config['token']
 INFLUXDB_ORG = influxdb_config['org']
 BUCKET = influxdb_config['bucket']
 
-# InfluxDB Client initialisieren
+
+# Initialisieren des InfluxDB-Clients
 client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG)
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
@@ -44,7 +44,7 @@ if 'thresholds' not in config:
     logging.error("Sektion [thresholds] in config.ini nicht gefunden!")
     raise KeyError("Sektion [thresholds] in config.ini nicht gefunden!")
 
-# Schwellenwerte aus config.ini lesen
+# Schwellenwerte aus config.ini einlesen
 thresholds_config = config['thresholds']
 THRESHOLDS = {
     "disk_usage": {
@@ -65,10 +65,11 @@ THRESHOLDS = {
     }
 }
 
-@app.route('/submit', methods=['POST'])
+@app.route('/submit', methods=['POST']) # Definieren einer Route zum Empfangen von Systemmetriken via POST
 def receive_metrics():
-    data = request.json
-    hostname = data.get("hostname")
+    data = request.json # JSON-Daten aus der POST-Anfrage extrahieren
+    hostname = data.get("hostname") # Den Hostnamen aus den Daten extrahieren
+
 
     # Prüfe Schwellenwerte für jede Metrik und delegiere Alarmierung an alarm.py
     for metric, value in data.items():
@@ -91,14 +92,15 @@ def receive_metrics():
         .time(datetime.utcnow().isoformat() + "Z")
     )
 
-    try:
+    try:  # Schreiben der Metriken in InfluxDB
         write_api.write(bucket=BUCKET, record=point)
         logging.info("InfluxDB Schreiben erfolgreich für POST /submit")
-    except Exception as e:
+    except Exception as e: # Fehlerprotokollierung, falls das Schreiben fehlschlägt
         logging.error(f"InfluxDB Schreiben fehlgeschlagen: {e}")
         return {"status": "failed", "error": str(e)}, 500
 
     return {"status": "success"}, 200
 
-if __name__ == "__main__":
+# Starten der Flask-Anwendung
+if __name__ == "__main__":  
     app.run(host="0.0.0.0", port=5000)
