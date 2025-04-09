@@ -7,14 +7,14 @@ import requests
 import time
 import logging
 
-# Logging konfigurieren
+# logging konfigurieren: schreibt Infos und Fehler in agent.log
 logging.basicConfig(
     filename='agent.log',  # Log-Datei im aktuellen Verzeichnis
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-# Funktion zum Ermitteln der IP-Adresse
+#  IP-Adresse des Hosts ermitteln
 def get_ip_address():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -27,7 +27,7 @@ def get_ip_address():
         logging.error(f"Fehler beim Ermitteln der IP-Adresse: {e}")
         return "unknown"
 
-# Metriken sammeln
+# Alle Metriken,Messwerte sammeln und in einem Dictionary bündeln
 def get_disk_usage():
     return psutil.disk_usage('/').percent  # Direkt auf das Host-Dateisystem zugreifen
 
@@ -57,7 +57,7 @@ def collect_metrics():
     }
     return metrics
 
-# Metriken an den Server senden
+#  Metriken per HTTP POST an Monitoring-Server schicken
 def send_to_server(metrics):
     try:
         # Der Server läuft in Docker, daher verwenden wir den Service-Namen
@@ -69,7 +69,7 @@ def send_to_server(metrics):
     except Exception as e:
         logging.error(f"Fehler beim Senden der Daten an den Server: {e}")
 
-# Hauptloop des Agenten
+# Hauptloop des Agenten, all 60 Sekunden Metriken sammeln und senden
 def agent_loop():
     logging.info("Starte Agent lokal auf dem Host...")
     while True:
