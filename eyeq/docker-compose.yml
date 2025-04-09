@@ -2,47 +2,47 @@ services:
   monitoring-server:
     container_name: eyeq-server
     hostname: eyeq-server
-    build: /opt/eyeq/server
+    build: /opt/eyeq/server # Pfad zum Verzeichnis, in dem sich das Dockerfile für den Server befindet
     ports:
-      - "5000:5000"
+      - "5000:5000" # Exponiert Port 5000 des Containers nach außen (Zugriff auf den Flask-Server)
     volumes:
-      - /opt/eyeq/server/monitoring.log:/app/monitoring.log
+      - /opt/eyeq/server/monitoring.log:/app/monitoring.log # Bindet das Logfile des Servers aus dem Hostsystem in den Container ein
     depends_on:
-      - influxdb
+      - influxdb # Stellt sicher, dass der InfluxDB-Container zuerst gestartet wird, bevor der Server läuft
     networks:
-      - eyeq-network
+      - eyeq-network # Dieser Service wird dem 'eyeq-network' hinzugefügt, damit er mit anderen Containern im selben Netzwerk kommunizieren kann
 
   influxdb:
-    container_name: eyeq-db
-    image: influxdb:2.7
+    container_name: eyeq-db # Name des InfluxDB-Containers
+    image: influxdb:2.7 # Verwendetes Docker-Image für InfluxDB
     ports:
-      - "8086:8086"
+      - "8086:8086" # Exponiert den Standard-Port 8086 für InfluxDB
     environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=root
-      - DOCKER_INFLUXDB_INIT_PASSWORD=Start123
-      - DOCKER_INFLUXDB_INIT_ORG=itsolutions
-      - DOCKER_INFLUXDB_INIT_BUCKET=eyeqdb
+      - DOCKER_INFLUXDB_INIT_MODE=setup # Setzt InfluxDB in den Setup-Modus
+      - DOCKER_INFLUXDB_INIT_USERNAME=root # Initialer Benutzername
+      - DOCKER_INFLUXDB_INIT_PASSWORD=Start123 # Initiales Passwort
+      - DOCKER_INFLUXDB_INIT_ORG=itsolutions # Initiale Organisation
+      - DOCKER_INFLUXDB_INIT_BUCKET=eyeqdb  # Initialer Bucket (Datenbank)
     volumes:
-      - /opt/eyeq/influxdb-data:/var/lib/influxdb2
+      - /opt/eyeq/influxdb-data:/var/lib/influxdb2 # Bindet das Datenverzeichnis von InfluxDB auf dem Host ins Container-Verzeichnis ein
     networks:
-      - eyeq-network
+      - eyeq-network # Dieser Service wird ebenfalls dem 'eyeq-network' hinzugefügt
 
   grafana:
-    container_name: eyeq-grafana
-    image: grafana/grafana:10.4.1
+    container_name: eyeq-grafana  # Name des Grafana-Containers
+    image: grafana/grafana:10.4.1 # Verwendetes Docker-Image für Grafana
     ports:
-      - "3000:3000"
+      - "3000:3000" # Exponiert den Standard-Port 3000 für Grafana
     depends_on:
-      - influxdb
+      - influxdb # Stellt sicher, dass InfluxDB gestartet wird, bevor Grafana startet
     volumes:
-      - /opt/eyeq/grafana-data:/var/lib/grafana
+      - /opt/eyeq/grafana-data:/var/lib/grafana # Bindet das Verzeichnis von Grafana auf dem Host ins Container-Verzeichnis ein
     networks:
-      - eyeq-network
+      - eyeq-network # Grafana wird ebenfalls dem 'eyeq-network' hinzugefügt
 
 networks:
   eyeq-network:
-    driver: bridge
+    driver: bridge # Verwendet das Standard-Bridge-Netzwerk für die Kommunikation zwischen den Containern
 
 volumes:
   influxdb-data:
@@ -50,10 +50,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /opt/eyeq/influxdb-data
+      device: /opt/eyeq/influxdb-data # Verzeichnis auf dem Host, das als persistent Volume für InfluxDB dient
   grafana-data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /opt/eyeq/grafana-data
+      device: /opt/eyeq/grafana-data # Verzeichnis auf dem Host, das als persistent Volume für Grafana dient
+
